@@ -1,11 +1,11 @@
-describe('test createDirsIfNotExists()', () => {
+describe('test Tilda class', () => {
 
-  test('test 1', () => {
+  test('test createDirsIfNotExists() method', () => {
     const fs = require('fs');
     const path = require('path');
     const currDir = path.resolve(__dirname);
 
-    const Tilda = require('./index');
+    const Tilda = require('./Tilda');
     const tilda = new Tilda();
     tilda.createDirsIfNotExists();
 
