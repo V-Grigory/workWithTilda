@@ -6,15 +6,16 @@ class Tilda {
 
   createDirsIfNotExists() {
     const fs = require('fs');
-    const path = require("path");
+    const path = require('path');
 
-    const jsDir = `${path.resolve(__dirname)}/js`;
-    const cssDir = `${path.resolve(__dirname)}/css`;
-    const imagesDir = `${path.resolve(__dirname)}/images`;
+    const currDir = path.resolve(__dirname);
+    const needDirs = ['tilda', 'tilda/js', 'tilda/css', 'tilda/images'];
 
-    if (!fs.existsSync(jsDir)) fs.mkdirSync(jsDir, 0o744);
-    if (!fs.existsSync(cssDir)) fs.mkdirSync(cssDir, 0o744);
-    if (!fs.existsSync(imagesDir)) fs.mkdirSync(imagesDir, 0o744);
+    needDirs.forEach(needDir => {
+      if (!fs.existsSync(`${currDir}/${needDir}`)) {
+        fs.mkdirSync(`${currDir}/${needDir}`, 0o744)
+      }
+    })
   }
 
   getProjectData() {
