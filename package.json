@@ -1,0 +1,29 @@
+{
+  "name": "workwithtilda",
+  "version": "1.0.0",
+  "description": "download project and pages from tilda",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "tilda",
+    "javascript",
+    "nodejs"
+  ],
+  "author": {
+    "name": "Grigory Volchok",
+    "email": "grigoryvolchok@gmail.com",
+    "url": "https://grigoryvolchok.com"
+  },
+  "homepage": "https://github.com/V-Grigory/workWithTilda.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/V-Grigory/workWithTilda.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  },
+  "dependencies": {}
+}
