@@ -4,15 +4,10 @@ class Tilda {
     this.api = api
   }
 
-  checkApiParams() {
-
-  }
-
   createDirsIfNotExists() {
     const fs = require('fs');
-    const path = require('path');
 
-    const currDir = path.resolve(__dirname);
+    const currDir = '.';
     const needDirs = ['tilda', 'tilda/js', 'tilda/css', 'tilda/images'];
 
     needDirs.forEach(needDir => {
@@ -31,10 +26,17 @@ class Tilda {
   }
 
   getPage(pageId) {
-    this.checkProjectIdAndAccessKeys();
-    this.createDirsIfNotExists();
-    this.getProjectItselfData();
-    this.getPageData();
+    return new Promise((resolve, reject) => {
+
+      let errors = this.api.checkParams().errors;
+      if (errors) return reject(errors);
+
+      this.createDirsIfNotExists();
+      // this.getProjectItselfData();
+      // this.getPageData();
+
+      return resolve()
+    })
   }
 
 }
