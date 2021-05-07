@@ -10,6 +10,8 @@ describe('Tilda class', () => {
     const tilda = new Tilda()
     tilda.createDirsIfNotExists()
 
+    expect(() => { tilda.createDirsIfNotExists() }).not.toThrow()
+
     expect(fs.existsSync(`${currDir}/tilda`)).toBeTruthy()
     expect(fs.existsSync(`${currDir}/tilda/js`)).toBeTruthy()
     expect(fs.existsSync(`${currDir}/tilda/css`)).toBeTruthy()
