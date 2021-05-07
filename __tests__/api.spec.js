@@ -77,4 +77,53 @@ describe('Api class', () => {
 
   })
 
+  test('validateProjectData() method', () => {
+
+    let api = new Api(), params
+
+    params = {
+      status: 'ERROR',
+      message: 'Bad request line. Wrong publickey length',
+      errorside: 'info'
+    }
+    expect(() => { api.validateProjectData(params) }).toThrow()
+
+    params = {
+      status: 'some_wrong_status',
+      message: 'Bad request line. Wrong publickey length',
+      errorside: 'info'
+    }
+    expect(() => { api.validateProjectData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'ccc' }],
+        css: []
+      }
+    }
+    expect(() => { api.validateProjectData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to2: 'xxx' }],
+        css: [{ from: 'xxx', to: 'xxx' }],
+        js: [{ from1: 'xxx', to: 'xxx' }, { from: 'xxx', to: 'xxx' }]
+      }
+    }
+    expect(() => { api.validateProjectData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'xxx' }],
+        css: [{ from: 'xxx', to: 'xxx' }],
+        js: [{ from: 'xxx', to: 'xxx' }, { from: 'xxx', to: 'xxx' }]
+      }
+    }
+    expect(() => { api.validateProjectData(params) }).not.toThrow()
+
+  })
+
 })
