@@ -12,10 +12,10 @@ describe('Tilda class', () => {
 
     expect(() => { tilda.createDirsIfNotExists() }).not.toThrow()
 
-    expect(fs.existsSync(`${currDir}/tilda`)).toBeTruthy()
-    expect(fs.existsSync(`${currDir}/tilda/js`)).toBeTruthy()
-    expect(fs.existsSync(`${currDir}/tilda/css`)).toBeTruthy()
-    expect(fs.existsSync(`${currDir}/tilda/images`)).toBeTruthy()
+    expect(fs.existsSync(`${currDir}/${tilda.tildaDir}`)).toBeTruthy()
+    expect(fs.existsSync(`${currDir}/${tilda.tildaDir}/js`)).toBeTruthy()
+    expect(fs.existsSync(`${currDir}/${tilda.tildaDir}/css`)).toBeTruthy()
+    expect(fs.existsSync(`${currDir}/${tilda.tildaDir}/images`)).toBeTruthy()
   })
 
 })

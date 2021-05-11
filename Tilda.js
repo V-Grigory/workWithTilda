@@ -1,6 +1,7 @@
 class Tilda {
 
   constructor(api) {
+    this.tildaDir = 'tilda'
     this.api = api
     // this.getProjectDataMethod = 'getRejectedRequest'
     // this.getProjectDataMethod = 'getResolvedWrongMockData'
@@ -12,7 +13,9 @@ class Tilda {
     const fs = require('fs')
 
     const currDir = '.'
-    const needDirs = ['tilda', 'tilda/js', 'tilda/css', 'tilda/images']
+    const needDirs = [
+      this.tildaDir, `${this.tildaDir}/js`, `${this.tildaDir}/css`, `${this.tildaDir}/images`
+    ]
 
     needDirs.forEach(needDir => {
       if (!fs.existsSync(`${currDir}/${needDir}`)) {
