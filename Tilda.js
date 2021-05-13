@@ -6,10 +6,6 @@ class Tilda {
   constructor(api) {
     this.tildaDir = './tilda'
     this.api = api
-    // this.getProjectDataMethod = 'getRejectedRequest'
-    // this.getProjectDataMethod = 'getResolvedWrongMockData'
-    // this.getProjectDataMethod = 'getResolvedSuccessMockData'
-    this.getProjectDataMethod = 'sendRequestByHttp'
   }
 
   createDirsIfNotExists() {
@@ -25,7 +21,6 @@ class Tilda {
   }
 
   setProjectData(projectData) {
-    console.log('--- setProjectData ... ---')
     return new Promise((resolve, reject) => {
 
       let downloadFilePromises = [
@@ -60,9 +55,7 @@ class Tilda {
       try { this.createDirsIfNotExists() }
       catch (e) { return reject(e) }
 
-      let projectData = this.api.getProjectData(this.getProjectDataMethod).then(v => {
-        return this.setProjectData(v)
-      })
+      let projectData = this.api.getProjectData().then(v => this.setProjectData(v))
       // let pageData = this.api.getPageData(pageId).then(v => this.setPageData(v))
 
       Promise.all([projectData, /*pageData*/])
@@ -73,10 +66,8 @@ class Tilda {
 
   downloadFile(url, dest) {
     return new Promise((resolve, reject) => {
-      console.log('--- downloadFile ... ---')
       // setTimeout(() => { return resolve() }, 1000)
       // setTimeout(() => reject(new Error(`Server responded with `)), 1000)
-
       // return;
       https.get(url, response => {
 
@@ -109,7 +100,6 @@ class Tilda {
   }
 
   createFile(pathAndNameFile, contentFile) {
-    console.log('--- createFile ... ---')
     return new Promise((resolve, reject) => {
       fs.writeFile(pathAndNameFile, contentFile, error => {
         if (error) return reject(error)

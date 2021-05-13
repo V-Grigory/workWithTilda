@@ -7,6 +7,7 @@ class Api {
     this.projectid = params.projectid
     this.publickey = params.publickey
     this.secretkey = params.secretkey
+    this.getProjectDataMethod = params.getProjectDataMethod
   }
 
   checkParams() {
@@ -16,7 +17,7 @@ class Api {
     }
   }
 
-  getProjectData(getProjectDataMethod) {
+  getProjectData() {
     return new Promise((resolve, reject) => {
 
       let url = `http://api.tildacdn.info/v1/getprojectexport/`
@@ -24,7 +25,7 @@ class Api {
       url += `&secretkey=${this.secretkey}`
       url += `&projectid=${this.projectid}`
 
-      this[getProjectDataMethod](url).then(res => {
+      this[this.getProjectDataMethod](url).then(res => {
 
         try {
           this.validateProjectData(res)
