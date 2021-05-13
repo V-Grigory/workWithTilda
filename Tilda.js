@@ -1,3 +1,6 @@
+const https = require('https')
+const fs = require('fs')
+
 class Tilda {
 
   constructor(api) {
@@ -5,18 +8,15 @@ class Tilda {
     this.api = api
     // this.getProjectDataMethod = 'getRejectedRequest'
     // this.getProjectDataMethod = 'getResolvedWrongMockData'
-    this.getProjectDataMethod = 'getResolvedSuccessMockData'
-    // this.getProjectDataMethod = 'sendRequestByHttp'
+    // this.getProjectDataMethod = 'getResolvedSuccessMockData'
+    this.getProjectDataMethod = 'sendRequestByHttp'
   }
 
   createDirsIfNotExists() {
-    const fs = require('fs')
-
     const currDir = '.'
     const needDirs = [
       this.tildaDir, `${this.tildaDir}/js`, `${this.tildaDir}/css`, `${this.tildaDir}/images`
     ]
-
     needDirs.forEach(needDir => {
       if (!fs.existsSync(`${currDir}/${needDir}`)) {
         try {
@@ -29,14 +29,23 @@ class Tilda {
   }
 
   setProjectData(projectData) {
-    try {
+    return new Promise((resolve, reject) => {
+
       console.log('--- setProjectData ... ---')
-      //console.log(projectData)
-      console.log(projectData.result.title)
-      return Promise.resolve()
-    } catch (e) {
-      return Promise.reject(e)
-    }
+      let downloadFilePromises = [];
+
+      ['images', 'css', 'js'].forEach(typeAsset => {
+        projectData.result[typeAsset].forEach(asset => {
+          console.log(asset.from, `${this.tildaDir}/${typeAsset}/${asset.to}`)
+          downloadFilePromises.push(
+              this.downloadFile(asset.from, `./${this.tildaDir}/${typeAsset}/${asset.to}`)
+          )
+        })
+      })
+      Promise.all(downloadFilePromises)
+          .then(() => resolve())
+          .catch(errors => reject(errors))
+    })
   }
 
   setPageData() {
@@ -62,6 +71,43 @@ class Tilda {
       Promise.all([projectData, /*pageData*/])
           .then(() => resolve())
           .catch(errors => reject(errors))
+    })
+  }
+
+  downloadFile(url, dest) {
+    return new Promise((resolve, reject) => {
+      console.log('--- downloadFile ... ---')
+      // setTimeout(() => { return resolve() }, 1000)
+      // setTimeout(() => reject(new Error(`Server responded with `)), 1000)
+
+      // return;
+      https.get(url, response => {
+
+        if (response.statusCode === 200) {
+
+          const file = fs.createWriteStream(dest, { flags: 'w' })
+
+          response.pipe(file)
+
+          file.on('error', error => {
+            file.close()
+            fs.unlink(dest, () => {})
+            return reject(error)
+          })
+
+          file.on('finish', () => {
+            file.close()
+            return resolve()
+          })
+
+        } else {
+          let error = `When downloadFile, tilda responded with `
+          error += `${response.statusCode}: ${response.statusMessage}`
+          return reject(new Error(error))
+        }
+
+      }).on('error', error => reject(error))
+
     })
   }
 

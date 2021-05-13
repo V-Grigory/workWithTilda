@@ -1,3 +1,5 @@
+const http = require('http')
+
 class Api {
 
   constructor(params) {
@@ -92,8 +94,6 @@ class Api {
   }
 
   sendRequestByHttp(url) {
-    const http = require('http')
-
     return new Promise((resolve, reject) => {
       let data = ''
       http.get(url, resp => {
