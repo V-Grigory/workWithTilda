@@ -88,7 +88,8 @@ class Api {
             from: "https://static.tildacdn.com/js/tilda-scripts-2.8.min.js",
             to: "tilda-scripts-2.8.min.js"
           }
-        ]
+        ],
+        htaccess: "DirectoryIndex page2755600.html RewriteEngine On "
       }
     })
   }
@@ -112,9 +113,14 @@ class Api {
     if (projectData.status !== 'FOUND') {
       throw new Error('validateProjectData -> status is not "FOUND"')
     }
+    if (!projectData.result) {
+      throw new Error(`validateProjectData -> does not exist result`)
+    }
+    if (!projectData.result.htaccess) {
+      throw new Error(`validateProjectData -> does not exist result.htaccess`)
+    }
     ['images', 'css', 'js'].forEach(asset => {
       let errMsg = `validateProjectData -> not isset data in result.${asset}`
-      if (!projectData.result) throw new Error(errMsg)
       if (!projectData.result[asset]) throw new Error(errMsg)
       if (!projectData.result[asset].length) throw new Error(errMsg)
       projectData.result[asset].forEach(v => {

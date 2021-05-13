@@ -122,6 +122,28 @@ describe('Api class', () => {
         js: [{ from: 'xxx', to: 'xxx' }, { from: 'xxx', to: 'xxx' }]
       }
     }
+    expect(() => { api.validateProjectData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'xxx' }],
+        css: [{ from: 'xxx', to: 'xxx' }],
+        js: [{ from: 'xxx', to: 'xxx' }, { from: 'xxx', to: 'xxx' }],
+        htaccess: ""
+      }
+    }
+    expect(() => { api.validateProjectData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'xxx' }],
+        css: [{ from: 'xxx', to: 'xxx' }],
+        js: [{ from: 'xxx', to: 'xxx' }, { from: 'xxx', to: 'xxx' }],
+        htaccess: "DirectoryIndex page2755600.html RewriteEngine On "
+      }
+    }
     expect(() => { api.validateProjectData(params) }).not.toThrow()
 
   })
