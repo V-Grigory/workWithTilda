@@ -4,7 +4,7 @@ const fs = require('fs')
 class Tilda {
 
   constructor(api) {
-    this.tildaDir = 'tilda'
+    this.tildaDir = './tilda'
     this.api = api
     // this.getProjectDataMethod = 'getRejectedRequest'
     // this.getProjectDataMethod = 'getResolvedWrongMockData'
@@ -13,32 +13,29 @@ class Tilda {
   }
 
   createDirsIfNotExists() {
-    const currDir = '.'
     const needDirs = [
       this.tildaDir, `${this.tildaDir}/js`, `${this.tildaDir}/css`, `${this.tildaDir}/images`
     ]
     needDirs.forEach(needDir => {
-      if (!fs.existsSync(`${currDir}/${needDir}`)) {
-        try {
-          fs.mkdirSync(`${currDir}/${needDir}`, 0o744)
-        } catch (e) {
-          throw new Error(e)
-        }
+      if (!fs.existsSync(needDir)) {
+        try { fs.mkdirSync(needDir, 0o744) }
+        catch (e) { throw new Error(e) }
       }
     })
   }
 
   setProjectData(projectData) {
+    console.log('--- setProjectData ... ---')
     return new Promise((resolve, reject) => {
 
-      console.log('--- setProjectData ... ---')
-      let downloadFilePromises = [];
+      let downloadFilePromises = [
+          this.createFile(`${this.tildaDir}/.htaccess`, projectData.result.htaccess)
+      ];
 
       ['images', 'css', 'js'].forEach(typeAsset => {
         projectData.result[typeAsset].forEach(asset => {
-          console.log(asset.from, `${this.tildaDir}/${typeAsset}/${asset.to}`)
           downloadFilePromises.push(
-              this.downloadFile(asset.from, `./${this.tildaDir}/${typeAsset}/${asset.to}`)
+            this.downloadFile(asset.from, `${this.tildaDir}/${typeAsset}/${asset.to}`)
           )
         })
       })
@@ -108,6 +105,17 @@ class Tilda {
 
       }).on('error', error => reject(error))
 
+    })
+  }
+
+  createFile(pathAndNameFile, contentFile) {
+    console.log('--- createFile ... ---')
+    return new Promise((resolve, reject) => {
+      fs.writeFile(pathAndNameFile, contentFile, error => {
+        if (error) return reject(error)
+        console.log('Saved!')
+        return resolve()
+      })
     })
   }
 
