@@ -51,6 +51,9 @@ class Tilda {
   downloadPage(pageId) {
     return new Promise((resolve, reject) => {
 
+      try { this.checkPageId(pageId) }
+      catch (e) { return reject(e) }
+
       try { this.api.checkParams() }
       catch (e) { return reject(e) }
 
@@ -64,6 +67,12 @@ class Tilda {
           .then(() => resolve())
           .catch(errors => reject(errors))
     })
+  }
+
+  checkPageId(pageId) {
+    if (!pageId) throw new Error('does not exist pageId')
+    if (isNaN(pageId)) throw new Error('pageId is not a number')
+    if (typeof pageId !== 'number') throw new Error('pageId is not a number')
   }
 
   downloadFile(url, dest) {
