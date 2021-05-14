@@ -8,6 +8,7 @@ class Api {
     this.publickey = params.publickey
     this.secretkey = params.secretkey
     this.getProjectDataMethod = params.getProjectDataMethod
+    this.getPageDataMethod = params.getPageDataMethod
   }
 
   checkParams() {
@@ -41,9 +42,23 @@ class Api {
 
   getPageData(pageId) {
     return new Promise((resolve, reject) => {
-      console.log('2222222')
-      return resolve()
-      return reject('errors getPageData')
+
+      let url = `http://api.tildacdn.info/v1/getpageexport/`
+      url += `?publickey=${this.publickey}`
+      url += `&secretkey=${this.secretkey}`
+      url += `&pageid=${pageId}`
+
+      this[this.getPageDataMethod](url).then(res => {
+
+        try {
+          this.validatePageData(res)
+          resolve(res)
+        }
+        catch (e) { return reject(e) }
+
+      }).catch(e => {
+        reject(e)
+      })
     })
   }
 
@@ -59,7 +74,7 @@ class Api {
     })
   }
 
-  getResolvedSuccessMockData() {
+  getResolvedSuccessMockProjectData() {
     return Promise.resolve({
       status: "FOUND",
       result: {
@@ -91,6 +106,27 @@ class Api {
           }
         ],
         htaccess: "DirectoryIndex page2755600.html RewriteEngine On "
+      }
+    })
+  }
+
+  getResolvedSuccessMockPageData() {
+    return Promise.resolve({
+      status: "FOUND",
+      result: {
+        title: "Культиваторы SOLAR FIELDS вышли на новый уровень",
+        filename: "page19509131.html",
+        images: [
+          {
+            from: "https://static.tildacdn.com/tild3730-6534-4562-a135-373335393161/_.jpg",
+            to: "tild3730-6534-4562-a135-373335393161___.jpg"
+          },
+          {
+            from: "https://static.tildacdn.com/tild6462-3832-4130-b534-336166626133/_.jpg",
+            to: "tild6462-3832-4130-b534-336166626133___.jpg"
+          }
+        ],
+        html: "HTML content"
       }
     })
   }
@@ -127,6 +163,33 @@ class Api {
       projectData.result[asset].forEach(v => {
         if (!v.from || !v.to) throw new Error(errMsg)
       })
+    })
+  }
+
+  validatePageData(pageData) {
+    if (pageData.status === 'ERROR') {
+      throw new Error(`validatePageData -> ${pageData.message}`)
+    }
+    if (pageData.status !== 'FOUND') {
+      throw new Error('validatePageData -> status is not "FOUND"')
+    }
+    if (!pageData.result) {
+      throw new Error(`validatePageData -> does not exist result`)
+    }
+    if (!pageData.result.title) {
+      throw new Error(`validatePageData -> does not exist result.title`)
+    }
+    if (!pageData.result.filename) {
+      throw new Error(`validatePageData -> does not exist result.filename`)
+    }
+    if (!pageData.result.html) {
+      throw new Error(`validatePageData -> does not exist result.html`)
+    }
+    let errMsg = `validatePageData -> not isset data in result.images`
+    if (!pageData.result.images) throw new Error(errMsg)
+    if (!pageData.result.images.length) throw new Error(errMsg)
+    pageData.result.images.forEach(v => {
+      if (!v.from || !v.to) throw new Error(errMsg)
     })
   }
 

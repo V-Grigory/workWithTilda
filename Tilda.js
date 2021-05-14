@@ -41,9 +41,11 @@ class Tilda {
   }
 
   setPageData() {
-    // console.log('444444444')
-    // return Promise.resolve('resolve setPageData')
-    // return Promise.reject('reject setPageData')
+    return new Promise((resolve, reject) => {
+      console.log('setPageData')
+      return resolve()
+      return reject(new Error('errors setPageData'))
+    })
   }
 
   downloadPage(pageId) {
@@ -56,9 +58,9 @@ class Tilda {
       catch (e) { return reject(e) }
 
       let projectData = this.api.getProjectData().then(v => this.setProjectData(v))
-      // let pageData = this.api.getPageData(pageId).then(v => this.setPageData(v))
+      let pageData = this.api.getPageData(pageId).then(v => this.setPageData(v))
 
-      Promise.all([projectData, /*pageData*/])
+      Promise.all([projectData, pageData])
           .then(() => resolve())
           .catch(errors => reject(errors))
     })
@@ -68,7 +70,8 @@ class Tilda {
     return new Promise((resolve, reject) => {
       // setTimeout(() => { return resolve() }, 1000)
       // setTimeout(() => reject(new Error(`Server responded with `)), 1000)
-      // return;
+      return resolve()
+
       https.get(url, response => {
 
         if (response.statusCode === 200) {
@@ -103,7 +106,6 @@ class Tilda {
     return new Promise((resolve, reject) => {
       fs.writeFile(pathAndNameFile, contentFile, error => {
         if (error) return reject(error)
-        console.log('Saved!')
         return resolve()
       })
     })

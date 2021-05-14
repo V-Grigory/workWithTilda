@@ -148,4 +148,116 @@ describe('Api class', () => {
 
   })
 
+  test('validatePageData() method', () => {
+
+    let api = new Api(), params
+
+    params = {
+      status: 'ERROR',
+      message: 'Bad request line. Missing parameter: pageid',
+      errorside: 'info'
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'some_wrong_status',
+      message: 'Bad request line. Wrong publickey length',
+      errorside: 'info'
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'ccc' }]
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        html: 'content'
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: '',
+        html: 'content'
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [],
+        html: 'content'
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'ccc' }],
+        html: ''
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to2: 'xxx' }],
+        html: 'content'
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to2: 'xxx' }, { from: 'xxx', to: 'xxx' }],
+        html: 'content'
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'xxx' }],
+        html: 'content'
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'xxx' }],
+        html: 'content',
+        title: '',
+        filename: ''
+      }
+    }
+    expect(() => { api.validatePageData(params) }).toThrow()
+
+    params = {
+      status: 'FOUND',
+      result: {
+        images: [{ from: 'xxx', to: 'xxx' }],
+        html: 'content',
+        title: 'title',
+        filename: 'filename'
+      }
+    }
+    expect(() => { api.validatePageData(params) }).not.toThrow()
+
+  })
+
 })
