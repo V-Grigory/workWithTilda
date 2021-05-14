@@ -16,6 +16,8 @@ class Api {
       throw new Error('When creating a tilda object, ' +
           'you must pass projectid, publickey and secretkey')
     }
+    if (!this.getProjectDataMethod ) throw new Error('dont set getProjectDataMethod')
+    if (!this.getPageDataMethod ) throw new Error('dont set getPageDataMethod')
   }
 
   getProjectData() {

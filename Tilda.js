@@ -23,28 +23,44 @@ class Tilda {
   setProjectData(projectData) {
     return new Promise((resolve, reject) => {
 
-      let downloadFilePromises = [
+      let filePromises = [
           this.createFile(`${this.tildaDir}/.htaccess`, projectData.result.htaccess)
       ];
 
       ['images', 'css', 'js'].forEach(typeAsset => {
         projectData.result[typeAsset].forEach(asset => {
-          downloadFilePromises.push(
+          filePromises.push(
             this.downloadFile(asset.from, `${this.tildaDir}/${typeAsset}/${asset.to}`)
           )
         })
       })
-      Promise.all(downloadFilePromises)
+      Promise.all(filePromises)
           .then(() => resolve())
           .catch(errors => reject(errors))
     })
   }
 
-  setPageData() {
+  setPageData(pageData) {
     return new Promise((resolve, reject) => {
-      console.log('setPageData')
-      return resolve()
-      return reject(new Error('errors setPageData'))
+      // console.log('setPageData')
+      // return resolve()
+      // return reject(new Error('errors setPageData'))
+
+      let filePromises = [
+        this.createFile(
+            `${this.tildaDir}/${pageData.result.filename}`,
+            pageData.result.html
+        )
+      ]
+
+      pageData.result.images.forEach(asset => {
+        filePromises.push(
+            this.downloadFile(asset.from, `${this.tildaDir}/images/${asset.to}`)
+        )
+      })
+      Promise.all(filePromises)
+          .then(() => resolve())
+          .catch(errors => reject(errors))
     })
   }
 
@@ -79,7 +95,7 @@ class Tilda {
     return new Promise((resolve, reject) => {
       // setTimeout(() => { return resolve() }, 1000)
       // setTimeout(() => reject(new Error(`Server responded with `)), 1000)
-      return resolve()
+      // return resolve()
 
       https.get(url, response => {
 
